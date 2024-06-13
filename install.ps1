@@ -104,4 +104,4 @@ poetry install --no-root
 
 # Start the program
 Write-Output "Starting the program..."
-poetry run python src/invisible-hand/main.py
+poetry run python invisible-hand/main.py
