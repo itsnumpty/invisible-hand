@@ -15,8 +15,7 @@ The script will handle the following tasks:
 
 ## Installation
 ```ps1
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/itsnumpty/invisible-hand/main/install.ps1 -OutFile install.ps1
-.\install.ps1 -repoUrl https://github.com/itsnumpty/invisible-hand.git
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/itsnumpty/invisible-hand/main/install.ps1 -OutFile install.ps1; .\install.ps1 -repoUrl https://github.com/itsnumpty/invisible-hand.git
 ```
 
 ## License
