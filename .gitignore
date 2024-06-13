@@ -1,0 +1,10 @@
+.venv
+config.py
+*.pyc
+__pycache__/
+*.png
+.vscode
+test.py
+*.stats
+test.py
+.VSCodeCounter

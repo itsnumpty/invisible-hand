@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "invisible-hand-v2"
+version = "0.1.0"
+description = ""
+authors = ["itsnumpty"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytesseract = "^0.3.10"
+requests = "^2.32.3"
+opencv-python = "^4.10.0.82"
+pywin32 = "^306"
+schedule = "^1.2.2"
+libsql-client = "^0.3.1"
+mysql-connector-python = "^8.4.0"
+pyautogui = "^0.9.54"
+pylance = "^0.12.1"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
