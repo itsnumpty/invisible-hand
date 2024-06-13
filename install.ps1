@@ -16,14 +16,14 @@ function Command-Exists {
 
 # Clone the repository
 Write-Output "Cloning the repository..."
-if (-Not (Test-Path "$repoDir\invisible-hand-v2")) {
-    git clone $repoUrl "$repoDir\invisible-hand-v2"
+if (-Not (Test-Path "$repoDir\invisible-hand")) {
+    git clone $repoUrl "$repoDir\invisible-hand"
 } else {
     Write-Output "Directory already exists. Skipping clone."
 }
 
 # Navigate to the repository directory
-Set-Location "$repoDir\invisible-hand-v2"
+Set-Location "$repoDir\invisible-hand"
 
 # Define possible locations
 $possible_game_locations = @("C:\Program Files (x86)\Origin\Battlefield V\bfv.exe", "D:\Program Files (x86)\Origin\Battlefield V\bfv.exe", "D:\Program Files\Origin\Battlefield V\bfv.exe")
@@ -86,7 +86,7 @@ DB_PORT = "$DB_PORT"
 "@
 
 # Write configuration to file
-$configContent | Out-File -FilePath invisible-hand-v2\config.py -Encoding utf8
+$configContent | Out-File -FilePath invisible-hand\config.py -Encoding utf8
 
 # Check if Poetry is installed
 if (-Not (Command-Exists "poetry")) {
@@ -104,4 +104,4 @@ poetry install --no-root
 
 # Start the program
 Write-Output "Starting the program..."
-poetry run python src/invisible-hand-v2/main.py
+poetry run python src/invisible-hand/main.py
