@@ -16,6 +16,8 @@ libsql-client = "^0.3.1"
 mysql-connector-python = "^8.4.0"
 pyautogui = "^0.9.54"
 pylance = "^0.12.1"
+pillow = "^10.4.0"
+image = "^1.5.33"
 
 
 [tool.poetry.group.dev.dependencies]

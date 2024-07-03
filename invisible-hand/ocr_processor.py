@@ -2,6 +2,7 @@ import cv2
 import pytesseract
 import numpy as np
 import pyautogui
+import time
 
 from pytesseract import Output
 
@@ -309,3 +310,11 @@ class OCRProcessor:
         coords = self.find_in_ocr(data, player_name, roi=roi_coords)
 
         return coords if coords else None
+    
+    def debug_save_image(self, failure_stage=None):
+        handler = GameWindowHandler()
+        image = handler.capture_window()
+
+        current_timestamp = int(time.time())
+
+        cv2.imwrite(f'debug/{failure_stage}{current_timestamp}.png', image)

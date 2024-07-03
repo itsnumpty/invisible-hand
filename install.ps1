@@ -7,7 +7,7 @@ $repoDir = $PSScriptRoot
 $poetryInstallUrl = "https://install.python-poetry.org"
 
 # Function to check if a command exists
-function Command-Exists {
+function Find-Poetry {
     param (
         [string]$command
     )
@@ -89,7 +89,7 @@ DB_PORT = "$DB_PORT"
 $configContent | Out-File -FilePath invisible-hand\config.py -Encoding utf8
 
 # Check if Poetry is installed
-if (-Not (Command-Exists "poetry")) {
+if (-Not (Find-Poetry "poetry")) {
     # Install Poetry
     Write-Output "Installing Poetry..."
     (Invoke-WebRequest -Uri $poetryInstallUrl -UseBasicParsing).Content | python -

@@ -27,7 +27,7 @@ class InvisibleHand:
         self.schedule_jobs()
 
     def run(self):
-        '''Main entrypoint of the script. This will establish a window handler for the game.'''
+        """Main entrypoint of the script. This will establish a window handler for the game."""
         while self.running:
             try:
                 # Create a GameWindowHandler instance to check the game window
@@ -57,6 +57,12 @@ class InvisibleHand:
                         self.handler.pull_foreground()
                         pyautogui.moveTo(x, y)
                         pyautogui.click()
+                        pyautogui.moveTo(526, 1009) # Kick button location
+                        pyautogui.click()
+                        time.sleep(0.5)
+                        if self.validate_kick(player['name']):
+                            pyautogui.moveTo(898, 655) # Confirm kick
+                            pyautogui.click()
                     else:
                         print(f"Coordinates ({x}, {y}) are outside the screen bounds.")
             except pyautogui.FailSafeException:
@@ -65,6 +71,16 @@ class InvisibleHand:
             except Exception as e:
                 print(f"An error occurred while processing player {player['name']}: {e}")
                 break
+    
+    def validate_kick(self, player_name):
+        image = self.handler.capture_window()
+        ocr = OCRProcessor(self.handler, self.scale_factor)
+        roi = (0.39, 0.42, 0.59, 0.499)
+        ocr_data = ocr.perform_ocr_for_state_engine_text(image, roi)
+        for text in ocr_data['text']:
+            if player_name in text.strip():
+                return True
+            return False
 
     def relaunch_game(self):
         self.startup.start_game()
@@ -90,6 +106,9 @@ class InvisibleHand:
         if self.server.server_game_change():
             print(f'Server has changed maps to {self.server.server_map}. Timing out.')
             time.sleep(60)
+            self.state_handler.detect_and_transition("In Game")
+            print('Timing out to allow scoreboard to settle.')
+            time.sleep(120)
             self.state_handler.detect_and_transition("Scoreboard")
         else:
             print('Map not changed')

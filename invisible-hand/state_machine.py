@@ -198,6 +198,7 @@ class OCRBasedStateMachine(StateMachine):
                 print(f"No valid transition found from {self.current_state.name} to {state.name}")
                 return False
         print(f"Failed to transition to {target_state_name} state.")
+        self.ocr_processor.debug_save_image(target_state_name)
         return False
     
     def _find_path(self, target_state_name):
