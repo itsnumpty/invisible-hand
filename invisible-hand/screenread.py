@@ -11,6 +11,10 @@ class GameWindowNotFoundException(Exception):
     """Exception raised when the game window is not found."""
     pass
 
+class GameUnfocusedExeption(Exception):
+    """Game window became unfocused. Terminating script."""
+    pass
+
 class GameWindowHandler:
     """Handles operations related to the game window, including capturing screenshots and setting window properties."""
 
@@ -18,6 +22,7 @@ class GameWindowHandler:
         """Initializes the GameWindowHandler with the game window title from the configuration."""
         self.window_title = config.game_window_name
         self.hwnd = self.get_game_window_handle()
+        self.focused = False
 
         # Initialize
         self.window_x = None
@@ -63,8 +68,12 @@ class GameWindowHandler:
             if not self.is_window_active():
                 print('Setting foreground')
                 try:
-                    win32gui.SetForegroundWindow(self.hwnd)
-                    time.sleep(2)
+                    if not self.focused:
+                        win32gui.SetForegroundWindow(self.hwnd)
+                        self.focused = True
+                        time.sleep(2)
+                    else:
+                        raise GameUnfocusedExeption
                 except Exception as e:
                     print(f"Failed to set foreground window: {e}")
         else:
