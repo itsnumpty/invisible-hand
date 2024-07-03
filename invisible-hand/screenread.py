@@ -1,6 +1,5 @@
 import win32gui
-import win32ui
-import win32con
+import pyautogui
 import numpy as np
 import cv2
 import time
@@ -100,43 +99,29 @@ class GameWindowHandler:
         Returns:
             np.ndarray: The captured image of the game window if successful, otherwise None.
         """
+        self.pull_foreground()
+
         if self.hwnd is None:
             print("No game window handle found, cannot capture window.")
             return None
         try:
             # Get the drawable area of the window
-            client_rect = win32gui.GetClientRect(self.hwnd)
             rect = win32gui.GetWindowRect(self.hwnd)
-            self.w = client_rect[2]
-            self.h = client_rect[3]
-            self.window_x = rect[0]
-            self.window_y = rect[1]
+            self.window_x, self.window_y, self.w, self.h = rect
 
-            # Capture screenshot with adjusted offsets
-            wDC = win32gui.GetWindowDC(self.hwnd)
-            dcObj = win32ui.CreateDCFromHandle(wDC)
-            cDC = dcObj.CreateCompatibleDC()
-            dataBitmap = win32ui.CreateBitmap()
-            dataBitmap.CreateCompatibleBitmap(dcObj, self.w, self.h)
-            cDC.SelectObject(dataBitmap)
-            cDC.BitBlt((0, 0), (self.w, self.h), dcObj, (0, 0), win32con.SRCCOPY)
+            # Capture screenshot with pyautogui
+            screenshot = pyautogui.screenshot(region=(self.window_x, self.window_y, self.w - self.window_x, self.h - self.window_y))
 
-            signedIntsArray = dataBitmap.GetBitmapBits(True)
-            img = np.frombuffer(signedIntsArray, dtype='uint8')
-            img.shape = (self.h, self.w, 4)
-            
-            # Free resources
-            dcObj.DeleteDC()
-            cDC.DeleteDC()
-            win32gui.ReleaseDC(self.hwnd, wDC)
-            win32gui.DeleteObject(dataBitmap.GetHandle())
+            # Convert the screenshot to a format cv2 can handle
+            img = np.array(screenshot)
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-            # Perform conversions so cv2 can handle the image
-            img = img[...,:3]  # Remove alpha channel
-            img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)  # Convert from BGRA to BGR
+            current_timestamp = int(time.time())
+
+            cv2.imwrite(f'debug/{current_timestamp}.png', img)
 
             return img
 
-        except win32ui.error as e:
+        except Exception as e:
             print(f"Failed to capture window: {e}")
             return None
